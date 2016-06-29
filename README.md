@@ -5,6 +5,14 @@ Tools for keeping clients in sync with server game state
 `npm install game-state-sync`
 
 ## Example usage
+In addition to `gss.reliable`, which is used in the examples, there are also
+`gss.unreliable`, `gss.reliableDiff`, and `gss.unreliableDiff`.
+
+The `unreliable` variants can deal with data sent from one side doesn't reach the other side, or arrived in the wrong order (think UDP),
+while the `reliable` variants **require** that each sent piece of data from server reaches the client in the right order and vice versa (think TCP).
+
+The `Diff`-suffixed variants sends differential updates as opposed to the whole state on every publish.
+
 ### Same process
 ```js
 var gss = require('game-state-sync');
