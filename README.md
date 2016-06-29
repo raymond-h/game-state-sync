@@ -8,10 +8,9 @@ Tools for keeping clients in sync with server game state
 In addition to `gss.reliable`, which is used in the examples, there are also
 `gss.unreliable`, `gss.reliableDiff`, and `gss.unreliableDiff`.
 
-The `unreliable` variants can deal with data sent from one side doesn't reach the other side, or arrived in the wrong order (think UDP),
-while the `reliable` variants **require** that each sent piece of data from server reaches the client in the right order and vice versa (think TCP).
+The `unreliable` variants can deal with data sent from one side doesn't reach the other side, or arrived in the wrong order (think UDP), while the `reliable` variants **require** that each sent piece of data from server reaches the client in the right order and vice versa (think TCP).
 
-The `Diff`-suffixed variants sends differential updates as opposed to the whole state on every publish.
+The `Diff`-suffixed variants sends differential updates as opposed to the whole state on every state publish. The `Server` part takes a single function `diffStates(newState, oldState)` that returns the difference between two states, while the `Client` part takes a single function `applyDiff(oldState, diff)` which returns the new state by using the old state and the difference returned from `diffStates`. Essentially, `applyDiff(oldState, diffStates(newState, oldState))` should equal `newState`.
 
 ### Same process
 ```js
