@@ -20,6 +20,8 @@ export class Server extends EventEmitter {
         this.dataHistory = [];
 
         this.on('data', data => {
+            // Handle potential duplicate and/or out-of-order packets
+            if(data.lastReceivedId <= this.lastReceivedId) return;
             this.lastReceivedId = data.lastReceivedId;
 
             this.dataHistory = filterOldDatas(this.dataHistory, this.lastReceivedId);
@@ -57,14 +59,13 @@ export class Client extends EventEmitter {
     }
 
     onData(data) {
-        if(data.id < this.lastId) return;
+        if(data.id <= this.lastId) return;
+        this.lastId = data.id;
 
         const state = (data.state != null) ? data.state :
             this.applyStateFn(
                 findStateById(this.dataHistory, data.basedOnId), data.diff
             );
-
-        this.lastId = data.id;
 
         this.dataHistory = filterOldDatas(this.dataHistory, data.basedOnId || 1);
         this.dataHistory.push({ id: data.id, state });

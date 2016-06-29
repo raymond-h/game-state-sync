@@ -21,7 +21,7 @@ export class Client extends EventEmitter {
         this.lastId = -1;
 
         this.on('data', data => {
-            if(data.id < this.lastId) return;
+            if(data.id <= this.lastId) return;
             this.lastId = data.id;
 
             this.emit('newState', data.state);
